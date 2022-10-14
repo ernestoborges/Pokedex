@@ -1185,6 +1185,9 @@ input::-webkit-calendar-picker-indicator {
 }
 
 @media only screen and (max-width: 700px) {
+  body {
+    height: 100%;
+  }
   .pokedex {
     flex-direction: column;
   }

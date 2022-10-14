@@ -10,16 +10,16 @@ function CryOption(props) {
 
   const audioRef = React.useRef();
 
-  function UpdateAudio() {
-    if (audioRef.current) {
-      audioRef.current.load();
-    }
-  }
+  // function UpdateAudio() {
+  //   if (audioRef.current) {
+  //     audioRef.current.load();
+  //   }
+  // }
 
-  if (props.isAudioUpdated === false) {
-    UpdateAudio();
-    props.setIsAudioUpdated(true);
-  }
+  // if (props.isAudioUpdated === false) {
+  //   UpdateAudio();
+  //   props.setIsAudioUpdated(true);
+  // }
 
   // let audioCtx = props.audioCtx;
   // const track = props.audioCtx.createMediaElementSource(audioRef);
