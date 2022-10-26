@@ -1,7 +1,7 @@
 <h1>Pokedex</h1>
 <p>Created with CodeSandbox</br>
 <a href="https://btfr7y.csb.app">CodeSandbox preview</a></p>
-</br>
+
 <a href="https://csb-yjyxj5.netlify.app">Deployed at Netlify</a>
 
 <h2>Description</h2>
