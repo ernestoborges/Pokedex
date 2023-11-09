@@ -49,6 +49,11 @@ const Main = styled.main`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
+  justify-content: center;
+
+  @media (max-width: 420px){
+    width: 100%;
+  }
 `
 
 const LeftSection = styled.section`
@@ -67,6 +72,14 @@ const LeftSection = styled.section`
   background-color: rgb(148 24 38);
   border-radius: 1rem;
   overflow: hidden;
+
+  @media (max-width: 420px){
+    border: none;
+    border-radius: 0;
+
+    width: 100%;
+    
+  }
 `
 const RightSection = styled.section`
   & > div {
@@ -91,6 +104,18 @@ const RightSection = styled.section`
     justify-content: flex-end;
     align-items: stretch;
     gap: 1rem;
+  }
+
+
+  @media (max-width: 420px){
+    border: none;
+    border-radius: 0;
+
+    width: 100%;
+    
+    & > div {
+      padding: 1.8rem 1rem 1.4rem;
+    }
   }
 `
 

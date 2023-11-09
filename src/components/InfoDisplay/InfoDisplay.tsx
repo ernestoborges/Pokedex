@@ -128,4 +128,11 @@ const Container = styled.div`
         overflow: hidden;
         background-color: var(--light-gray);
     }
+
+    @media (max-width: 420px){
+        width: 100%;
+        & > article {
+            width: 100%;
+        }
+    }
 `

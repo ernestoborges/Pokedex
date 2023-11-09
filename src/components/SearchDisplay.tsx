@@ -133,6 +133,12 @@ const Container = styled.section`
     gap: 1rem;
     align-items: center;
     padding: 0 2rem;
+
+    @media (max-width: 420px){
+        padding: 0 1rem;
+        width: 100%;
+        justify-content: space-around;
+    }
 `
 
 const DisplayContainer = styled.div`
