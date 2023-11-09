@@ -17,6 +17,9 @@ export function DirectionalButtons({
     function handleButtonUp() {
         setActiveButton("W");
         moveSelectorUp(1)
+        if ('vibrate' in navigator) {
+            navigator.vibrate(100);
+        }
     }
 
     function handleButtonRight() {
