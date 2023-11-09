@@ -74,25 +74,29 @@ export function DirectionalButtons({
             <div>
                 <UpDirectional
                     onMouseDown={() => handleButtonUp()}
+                    onTouchStart={() => handleButtonUp()}
                     onMouseUp={() => setActiveButton(null)}
                 >
                     W
                 </UpDirectional>
                 <RightDirectional
                     onMouseDown={() => handleButtonRight()}
+                    onTouchStart={() => handleButtonRight()}
                     onMouseUp={() => setActiveButton(null)}
                 >
                     D
                 </RightDirectional>
                 <DirectionalMiddle />
                 <DownDirectional
-                    onMouseDown={() => { handleButtonDown() }}
+                    onMouseDown={() => handleButtonDown()}
+                    onTouchStart={() => handleButtonDown()}
                     onMouseUp={() => setActiveButton(null)}
                 >
                     S
                 </DownDirectional>
                 <LeftDirectional
-                    onMouseDown={() => { handleButtonLeft() }}
+                    onMouseDown={() => handleButtonLeft()}
+                    onTouchStart={() => handleButtonLeft()}
                     onMouseUp={() => setActiveButton(null)}
                 >
                     A
