@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components"
+import styled from "styled-components";
+import { isMobile } from 'react-device-detect';
 
 export function DirectionalButtons({
     selectedItemIndex,
@@ -71,37 +72,56 @@ export function DirectionalButtons({
                 <div></div>
                 <div></div>
             </div>
-            <div>
-                <UpDirectional
-                    onMouseDown={() => handleButtonUp()}
-                    onTouchStart={() => handleButtonUp()}
-                    onMouseUp={() => setActiveButton(null)}
-                >
-                    W
-                </UpDirectional>
-                <RightDirectional
-                    onMouseDown={() => handleButtonRight()}
-                    onTouchStart={() => handleButtonRight()}
-                    onMouseUp={() => setActiveButton(null)}
-                >
-                    D
-                </RightDirectional>
-                <DirectionalMiddle />
-                <DownDirectional
-                    onMouseDown={() => handleButtonDown()}
-                    onTouchStart={() => handleButtonDown()}
-                    onMouseUp={() => setActiveButton(null)}
-                >
-                    S
-                </DownDirectional>
-                <LeftDirectional
-                    onMouseDown={() => handleButtonLeft()}
-                    onTouchStart={() => handleButtonLeft()}
-                    onMouseUp={() => setActiveButton(null)}
-                >
-                    A
-                </LeftDirectional>
-            </div>
+            {
+                isMobile
+                    ? <div>
+                        <UpDirectional
+                            onTouchStart={() => handleButtonUp()}
+                            onMouseUp={() => setActiveButton(null)}
+                        />
+                        <RightDirectional
+                            onTouchStart={() => handleButtonRight()}
+                            onMouseUp={() => setActiveButton(null)}
+                        />
+                        <DirectionalMiddle />
+                        <DownDirectional
+                            onTouchStart={() => handleButtonDown()}
+                            onMouseUp={() => setActiveButton(null)}
+                        />
+                        <LeftDirectional
+                            onTouchStart={() => handleButtonLeft()}
+                            onMouseUp={() => setActiveButton(null)}
+                        />
+                    </div>
+                    : <div>
+                        <UpDirectional
+                            onMouseDown={() => handleButtonUp()}
+                            onMouseUp={() => setActiveButton(null)}
+                        >
+                            W
+                        </UpDirectional>
+                        <RightDirectional
+                            onMouseDown={() => handleButtonRight()}
+                            onMouseUp={() => setActiveButton(null)}
+                        >
+                            D
+                        </RightDirectional>
+                        <DirectionalMiddle />
+                        <DownDirectional
+                            onMouseDown={() => handleButtonDown()}
+                            onMouseUp={() => setActiveButton(null)}
+                        >
+                            S
+                        </DownDirectional>
+                        <LeftDirectional
+                            onMouseDown={() => handleButtonLeft()}
+                            onMouseUp={() => setActiveButton(null)}
+                        >
+                            A
+                        </LeftDirectional>
+                    </div>
+            }
+
         </Container>
     </>
 }
