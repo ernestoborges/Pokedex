@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { useEffect, useState } from "react";
-import { BiSolidDownArrow, BiSolidLeftArrow, BiSolidUpArrow } from "react-icons/bi";
+import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 
 export function Button({
     keyName,
