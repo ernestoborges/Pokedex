@@ -4,6 +4,7 @@ import { Info } from "./Info";
 import { optionsList } from "./OptionsButtons";
 import { Details } from "./Details";
 import { Stats } from "./Stats";
+import { Cry } from "./Cry/Cry";
 
 export function InfoDisplay() {
 
@@ -14,7 +15,7 @@ export function InfoDisplay() {
             case 0: return "info"
             case 1: return "details"
             case 2: return "stats"
-            case 3: return "d"
+            case 3: return "cry"
             default: return false
         }
     }
@@ -24,7 +25,7 @@ export function InfoDisplay() {
             case 0: return <Info />
             case 1: return <Details />
             case 2: return <Stats />
-            case 3: return <>d</>
+            case 3: return <Cry />
             default: return false
         }
     }
