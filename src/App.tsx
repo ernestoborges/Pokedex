@@ -13,7 +13,6 @@ export default function App() {
 
   const { selectedPokemon } = usePokemonList()
 
-
   if (!selectedPokemon) {
     return <>loading...</>
   }
