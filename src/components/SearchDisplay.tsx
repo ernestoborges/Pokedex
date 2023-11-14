@@ -6,6 +6,7 @@ import { DirectionalButtons } from "./DirectionalButtons"
 import React from "react"
 import { ActionButtons } from "./ActionButtons"
 import { fixedNameMap } from "../utils/pokemons-fixed-names"
+import { useCryAudio } from "../providers/CryAudioProvider"
 
 const itemHeight = 34
 
@@ -53,12 +54,15 @@ const ListItem = React.memo(({
 
 export function SearchDisplay() {
 
-    const pokemonList = usePokemonList().pokemonList
+    const { pokemonList, selectedPokemon } = usePokemonList()
     const listSize = pokemonList.length
 
     const [selectedItemIndex, setSelectedItemIndex] = useState(0)
 
     const listRef: React.RefObject<HTMLUListElement> = useRef(null);
+
+    const { cryAudioRef } = useCryAudio()!
+    const cryUrl = `/audios/cries/${selectedPokemon.id}.wav`
 
     function moveSelectorUp(n: number) {
         if (selectedItemIndex > n - 1) {
@@ -124,6 +128,9 @@ export function SearchDisplay() {
                 </Wrapper>
             </DisplayContainer>
             <ActionButtons pokemonListIndex={selectedItemIndex} />
+
+            {/* audio component to emit pokemon cries */}
+            <audio ref={cryAudioRef} src={cryUrl} />
         </Container>
     </>
 }

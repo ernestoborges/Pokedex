@@ -1,13 +1,13 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 import { PokemonListProvider } from './providers/PokemonListProvider.tsx'
+import { CryAudioProvider } from './providers/CryAudioProvider.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <PokemonListProvider>
+  <PokemonListProvider>
+    <CryAudioProvider>
       <App />
-    </PokemonListProvider>
-  </React.StrictMode>,
+    </CryAudioProvider>
+  </PokemonListProvider>
 )

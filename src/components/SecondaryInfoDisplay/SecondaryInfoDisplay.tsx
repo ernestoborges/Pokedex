@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import { useInfoOption } from "../../providers/InfoOptionProvider"
+import { Cry2ndDisplay } from "./Cry";
 
 export function SecondaryInfoDisplay() {
 
@@ -10,7 +11,7 @@ export function SecondaryInfoDisplay() {
             case 0: return <>a</>
             case 1: return <>b</>
             case 2: return <>c</>
-            case 3: return <>d</>
+            case 3: return <Cry2ndDisplay />
             default: return false
         }
     }
@@ -41,5 +42,6 @@ const Container = styled.div`
         flex-direction: column;
         overflow: hidden;
         background-color: var(--light-gray);
+        padding: 0.6rem;
     }
 `
