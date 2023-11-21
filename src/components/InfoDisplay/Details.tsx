@@ -4,10 +4,20 @@ import { fixTextCharacters } from "../../utils/fix-text-characters"
 import { catchRateV } from "../../utils/pokemon-catch-rate-gen-v"
 import { genderRateFemale, genderRateMale } from "../../utils/gender-rate-calc"
 import { growthRateTextFix } from "../../utils/fix-growth-rate-text"
+import { useDescriptionText } from "../../providers/DescriptionTextProvider"
+import { useEffect } from "react"
 
 export function Details() {
 
-    const { selectedPokemon: pokemon } = usePokemonList()
+    const { selectedPokemon: pokemon } = usePokemonList();
+    const { language, languagesList, descriptionText, setDescriptionText } = useDescriptionText();
+
+    useEffect(() => {
+        setDescriptionText([
+            fixTextCharacters(pokemon.specie_data.genera.filter((g: any) => g.language.name === languagesList[language].apiName)[0].genus) + ".",
+            fixTextCharacters(pokemon.specie_data.flavor_text_entries.filter((fte: any) => fte.language.name === languagesList[language].apiName)[0].flavor_text)
+        ])
+    }, [pokemon, language])
 
     return <>
         <Section>
@@ -17,16 +27,8 @@ export function Details() {
                         <header>DESCRIPTION</header>
                         <section>
                             <div>
-                                <p>
-                                    {
-                                        `${fixTextCharacters(pokemon.specie_data.genera.filter((g: any) => g.language.name === "en")[0].genus)}.`
-                                    }
-                                </p>
-                                <p>
-                                    {
-                                        fixTextCharacters(pokemon.specie_data.flavor_text_entries.filter((fte: any) => fte.language.name === "en")[0].flavor_text)
-                                    }
-                                </p>
+                                <p>{descriptionText[0]}</p>
+                                <p>{descriptionText[1]}</p>
                             </div>
                         </section>
                     </div>

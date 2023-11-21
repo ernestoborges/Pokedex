@@ -6,12 +6,14 @@ export function Button({
     keyName,
     keyLabel,
     shape,
-    functionHandler
+    functionHandler,
+    selectedOption
 }: {
     keyName: string,
     keyLabel: string | React.ReactElement,
     shape: "square" | "circle" | "arrow-up" | "arrow-down"
     functionHandler: () => void
+    selectedOption: number[]
 }) {
 
     const [keyPressed, setKeyPressed] = useState<boolean>(false);
@@ -40,7 +42,7 @@ export function Button({
             window.removeEventListener('keyup', handleKeyUp);
 
         };
-    }, [])
+    }, [selectedOption])
 
     switch (shape) {
         case "square":
