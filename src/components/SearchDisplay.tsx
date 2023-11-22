@@ -66,6 +66,7 @@ export function SearchDisplay() {
     const cryUrl = `/audios/cries/${selectedPokemon.id}.wav`
 
     const { playBeep } = useBeepAudio()!
+    const [isFirstBeep, setIsFirstBeep] = useState(true)
 
     function moveSelectorUp(n: number) {
         if (selectedItemIndex > n - 1) {
@@ -101,7 +102,11 @@ export function SearchDisplay() {
     }
 
     useEffect(()=>{
-        playBeep()
+        if(isFirstBeep){
+            setIsFirstBeep(false)
+        } else {
+            playBeep()
+        }
     }, [selectedItemIndex, selectedPokemon])
 
     return <>
