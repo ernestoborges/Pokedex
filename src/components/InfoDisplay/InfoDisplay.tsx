@@ -5,10 +5,13 @@ import { optionsList } from "./OptionsButtons";
 import { Details } from "./Details";
 import { Stats } from "./Stats";
 import { Cry } from "./Cry/Cry";
+import { useEffect } from "react";
+import { useBeepAudio } from "../../providers/BeepAudioProvider";
 
 export function InfoDisplay() {
 
     const { option: selectedOption } = useInfoOption();
+    const { playBeep } = useBeepAudio()!;
 
     function handleHeaderTitle() {
         switch (selectedOption) {
@@ -29,6 +32,10 @@ export function InfoDisplay() {
             default: return false
         }
     }
+
+    useEffect(() => {
+        playBeep()
+    }, [selectedOption])
 
     return <>
         <Container>

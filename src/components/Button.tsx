@@ -18,6 +18,7 @@ export function Button({
 
     const [keyPressed, setKeyPressed] = useState<boolean>(false);
 
+    
     function handleClick() {
         functionHandler()
     }

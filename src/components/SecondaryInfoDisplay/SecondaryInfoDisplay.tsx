@@ -10,13 +10,15 @@ import { DescriptionLanguage } from "./SecondaryOptions/ChangeDescriptionLanguag
 import { useDescriptionText } from "../../providers/DescriptionTextProvider";
 import { ReadDescription } from "./SecondaryOptions/ReadDescriptionButton";
 import { usePokemonList } from "../../providers/PokemonListProvider";
+import { useBeepAudio } from "../../providers/BeepAudioProvider";
 
 export function SecondaryInfoDisplay() {
 
     const { option: infoOption } = useInfoOption();
     const { playCry, setCryVolume } = useCryAudio()!
     const { language, languageHandler, languagesList, descriptionText } = useDescriptionText();
-    const { selectedPokemon } = usePokemonList()
+    const { selectedPokemon } = usePokemonList();
+    const { playBeep } = useBeepAudio()!;
 
     const [volume, setVolume] = useState(0.6)
     const [isItemSelected, setIsItemSelected] = useState(false);
@@ -35,11 +37,55 @@ export function SecondaryInfoDisplay() {
 
     const speak = async () => {
 
-        const text = encodeURIComponent( selectedPokemon.name + ". " + descriptionText.join(" ").split("\n").join(" "))
+        let translatedName = selectedPokemon.specie_data.names.filter((n: any) => n.language.name === languagesList[language].apiName)[0].name
+
+        let text = (translatedName ? translatedName + ". " : "") + descriptionText.join(" ").split("\n").join(" ")
+        console.log(text)
+        let ttsList: string[] = []
+
+        if (text.length > 100) {
+            let phrase = ""
+
+            while (text.length > 100) {
+                let newText = text.split(".")
+                let slice
+
+                if (newText[newText.length - 1] === "") {
+                    newText.pop()
+                    slice = newText.pop() + "."
+                } else {
+                    slice = newText.pop() + "."
+                }
+
+                if ((phrase + slice).length < 100) {
+                    phrase = slice + phrase
+                } else {
+                    ttsList.unshift(phrase)
+                    phrase = slice
+                }
+                text = newText.join(".")
+            }
+
+            ttsList.unshift(text)
+        } else {
+            ttsList.push(text)
+        }
+
+        console.log(ttsList)
+
+
+        const encodedText = encodeURIComponent(ttsList.shift()!)
         const ttsLanguage = languagesList[language].ttsLanguage
-        const source = `https://translate.google.com/translate_tts?tl=${ttsLanguage}&q=${text}&client=tw-ob`;
+        const source = `https://translate.google.com/translate_tts?tl=${ttsLanguage}&q=${encodedText}&client=tw-ob`;
         const audio = new Audio(source);
         audio.play();
+        audio.addEventListener('ended', () => {
+            if (ttsList.length > 0) {
+                const newText = encodeURIComponent(ttsList.shift()!)
+                audio.src = `https://translate.google.com/translate_tts?tl=${ttsLanguage}&q=${newText}&client=tw-ob`;
+                audio.play();
+            }
+        });
     };
 
     const screens = [
@@ -93,7 +139,12 @@ export function SecondaryInfoDisplay() {
 
     useEffect(() => {
         setCryVolume(volume)
+        playBeep()
     }, [volume])
+
+    useEffect(() => {
+        playBeep()
+    }, [selectedItem, isItemSelected, language])
 
     return <>
         <Container>

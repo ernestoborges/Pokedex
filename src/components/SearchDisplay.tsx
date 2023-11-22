@@ -1,12 +1,13 @@
 import styled from "styled-components"
 import { usePokemonList } from "../providers/PokemonListProvider"
 import { PokemonIco } from "./PokemonIco"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { DirectionalButtons } from "./DirectionalButtons"
 import React from "react"
 import { ActionButtons } from "./ActionButtons"
 import { fixedNameMap } from "../utils/pokemons-fixed-names"
 import { useCryAudio } from "../providers/CryAudioProvider"
+import { useBeepAudio } from "../providers/BeepAudioProvider"
 
 const itemHeight = 34
 
@@ -64,6 +65,8 @@ export function SearchDisplay() {
     const { cryAudioRef } = useCryAudio()!
     const cryUrl = `/audios/cries/${selectedPokemon.id}.wav`
 
+    const { playBeep } = useBeepAudio()!
+
     function moveSelectorUp(n: number) {
         if (selectedItemIndex > n - 1) {
             let newSelectionPosition = selectedItemIndex - n
@@ -96,6 +99,10 @@ export function SearchDisplay() {
             }
         }
     }
+
+    useEffect(()=>{
+        playBeep()
+    }, [selectedItemIndex, selectedPokemon])
 
     return <>
         <Container>

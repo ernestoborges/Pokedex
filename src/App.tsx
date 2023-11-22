@@ -7,6 +7,7 @@ import { InfoOptionProvider } from "./providers/InfoOptionProvider";
 import { OptionsButtons } from "./components/InfoDisplay/OptionsButtons";
 import { usePokemonList } from "./providers/PokemonListProvider";
 import { SecondaryInfoDisplay } from "./components/SecondaryInfoDisplay/SecondaryInfoDisplay";
+import { ControlPainel } from "./components/ControlPainel/ControlPainel";
 
 export default function App() {
 
@@ -32,6 +33,7 @@ export default function App() {
               <InfoDisplay />
               <OptionsButtons />
               <div className="secondary-info-display-section">
+                <ControlPainel />
                 <SecondaryInfoDisplay />
               </div>
             </InfoOptionProvider>
@@ -99,6 +101,7 @@ const RightSection = styled.section`
     width: 100%;
     display: flex;
     justify-content: flex-end;
+    gap: 1rem;
   }
 
 
