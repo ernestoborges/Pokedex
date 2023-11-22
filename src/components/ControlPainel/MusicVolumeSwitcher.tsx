@@ -1,5 +1,5 @@
 import { DefaultVolumeSwitcher } from "./DefaultVolumeSwitcher"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { RiMusic2Fill } from "react-icons/ri";
 
 export function MusicVolumeSwitcher() {
@@ -7,7 +7,15 @@ export function MusicVolumeSwitcher() {
     const audioRef = useRef<HTMLAudioElement>(null)
     const [volume, setVolume] = useState<string>("0.0")
 
-    
+    useEffect(() => {
+        if (audioRef.current) {
+            audioRef.current.volume = Number(volume)
+            if (audioRef.current.paused) {
+                audioRef.current.play()
+            }
+        }
+    }, [volume])
+
     return <>
         <div>
             <DefaultVolumeSwitcher
