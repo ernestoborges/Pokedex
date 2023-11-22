@@ -1,12 +1,12 @@
 import { DefaultVolumeSwitcher } from "./DefaultVolumeSwitcher"
 import { useEffect, useRef, useState } from "react"
-import { RiMusic2Fill } from "react-icons/ri";
+import { PiSpeakerSimpleHighFill } from "react-icons/pi";
 import { useBeepAudio } from "../../providers/BeepAudioProvider";
 
 export function EffectVolumeSwitcher() {
 
     const audioRef = useRef<HTMLAudioElement>(null)
-    const [volume, setVolume] = useState<string>("0.2")
+    const [volume, setVolume] = useState<string>("0.1")
 
     const { setBeepVolume } = useBeepAudio()!
 
@@ -17,7 +17,7 @@ export function EffectVolumeSwitcher() {
     return <>
         <div>
             <DefaultVolumeSwitcher
-                icon={<RiMusic2Fill />}
+                icon={<PiSpeakerSimpleHighFill />}
                 volume={volume}
                 setVolume={setVolume}
             />
