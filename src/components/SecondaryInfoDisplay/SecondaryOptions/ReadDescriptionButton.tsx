@@ -2,14 +2,14 @@ import styled from "styled-components"
 import { BsCaretRightFill } from "react-icons/bs";
 
 export function ReadDescription({
-    speak
+    handlePlayDescription
 }: {
-    speak: () => void
+    handlePlayDescription: () => void
 }) {
 
     return <>
         <Container>
-            <Button onClick={speak}>
+            <Button onClick={() => handlePlayDescription()}>
                 <BsCaretRightFill />
                 Read
             </Button>

@@ -2,6 +2,7 @@ import { DefaultVolumeSwitcher } from "./DefaultVolumeSwitcher"
 import { useEffect, useRef, useState } from "react"
 import { PiSpeakerSimpleHighFill } from "react-icons/pi";
 import { useBeepAudio } from "../../providers/BeepAudioProvider";
+import { useDescriptionText } from "../../providers/DescriptionTextProvider";
 
 export function EffectVolumeSwitcher() {
 
@@ -9,9 +10,11 @@ export function EffectVolumeSwitcher() {
     const [volume, setVolume] = useState<string>("0.1")
 
     const { setBeepVolume } = useBeepAudio()!
+    const { setDesctiptionAudioVolume } = useDescriptionText()!
 
     useEffect(() => {
         setBeepVolume(volume)
+        setDesctiptionAudioVolume(volume)
     }, [volume])
 
     return <>

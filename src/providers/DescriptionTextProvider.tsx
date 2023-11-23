@@ -1,6 +1,5 @@
 import { createContext, useContext, useState } from "react";
 
-
 interface IDescriptionTextContext {
     language: number
     languagesList: {
@@ -11,6 +10,8 @@ interface IDescriptionTextContext {
     languageHandler: (n: number) => void
     descriptionText: string[]
     setDescriptionText: (s: string[]) => void
+    audioObject: HTMLAudioElement
+    setDesctiptionAudioVolume: (volume: string) => void
 }
 
 const DescriptionTextContext = createContext<IDescriptionTextContext | null>(null);
@@ -19,6 +20,8 @@ export function DescriptionTextProvider({ children }: { children: React.ReactNod
 
     const [language, setLanguage] = useState<number>(0)
     const [descriptionText, setDescriptionText] = useState(["", ""])
+
+    const audioObject = new Audio()
 
     const languagesList = [
         { name: "English", apiName: "en", ttsLanguage: "en-US" },
@@ -31,9 +34,12 @@ export function DescriptionTextProvider({ children }: { children: React.ReactNod
         { name: "Italian", apiName: "it", ttsLanguage: "it-IT" },
     ]
 
-
     function languageHandler(n: number) {
         setLanguage(n)
+    }
+
+    function setDesctiptionAudioVolume(volume: string) {
+        audioObject.volume = Number(volume)
     }
 
     return (
@@ -42,7 +48,9 @@ export function DescriptionTextProvider({ children }: { children: React.ReactNod
             languagesList,
             languageHandler,
             descriptionText,
-            setDescriptionText
+            setDescriptionText,
+            audioObject,
+            setDesctiptionAudioVolume
         }}>
             {children}
         </DescriptionTextContext.Provider>

@@ -16,12 +16,13 @@ import { EvolvesFrom } from "./SecondaryOptions/EvolvesFrom";
 import { getEvolutionChainNodes } from "../../utils/get-evulution-chain-nodes";
 import { EvolvesTo } from "./SecondaryOptions/EvolvesTo";
 import { getIdFromSpecieURL } from "../../utils/get-id-from-specie-url";
+import { textToSpeech } from "../../utils/text-to-speech";
 
 export function SecondaryInfoDisplay() {
 
     const { option: infoOption } = useInfoOption();
     const { playCry, setCryVolume } = useCryAudio()!
-    const { language, languageHandler, languagesList, descriptionText } = useDescriptionText();
+    const { language, languageHandler, languagesList, descriptionText, audioObject } = useDescriptionText();
     const { selectedPokemon, toggleShiny, isShiny } = usePokemonList();
     const { playBeep } = useBeepAudio()!;
 
@@ -31,11 +32,13 @@ export function SecondaryInfoDisplay() {
 
     const evoNodes = getEvolutionChainNodes(selectedPokemon)
     const pokemonChainLevel = evoNodes.find((p: any) => getIdFromSpecieURL(p.species.url) == selectedPokemon.id).chain_level
-
     const [selectedEF, setSelectedEF] = useState(-1);
     const evolvesFrom = evoNodes.reverse().filter((evo: any) => evo.chain_level === pokemonChainLevel - 1)
     const [selectedET, setSelectedET] = useState(-1);
     const evolvesTo = evoNodes.reverse().filter((evo: any) => evo.chain_level === pokemonChainLevel + 1)
+
+    let translatedName = selectedPokemon.specie_data.names.filter((n: any) => n.language.name === languagesList[language].apiName)[0].name
+    const fullTextoToRead = (translatedName ? translatedName + "." : "") + descriptionText.join(" ").split("\n").join(" ")
 
     const moveUp = () => {
         if (selectedItem > 0) {
@@ -48,58 +51,29 @@ export function SecondaryInfoDisplay() {
         }
     }
 
-    const speak = async () => {
+    const handlePlayDescription = async () => {
 
-        let translatedName = selectedPokemon.specie_data.names.filter((n: any) => n.language.name === languagesList[language].apiName)[0].name
-
-        let text = (translatedName ? translatedName + ". " : "") + descriptionText.join(" ").split("\n").join(" ")
-        console.log(text)
-        let ttsList: string[] = []
-
-        if (text.length > 100) {
-            let phrase = ""
-
-            while (text.length > 100) {
-                let newText = text.split(".")
-                let slice
-
-                if (newText[newText.length - 1] === "") {
-                    newText.pop()
-                    slice = newText.pop() + "."
-                } else {
-                    slice = newText.pop() + "."
-                }
-
-                if ((phrase + slice).length < 100) {
-                    phrase = slice + phrase
-                } else {
-                    ttsList.unshift(phrase)
-                    phrase = slice
-                }
-                text = newText.join(".")
-            }
-
-            ttsList.unshift(text)
-        } else {
-            ttsList.push(text)
-        }
-
-        console.log(ttsList)
-
+        const ttsList: string[] = await textToSpeech(fullTextoToRead)
 
         const encodedText = encodeURIComponent(ttsList.shift()!)
         const ttsLanguage = languagesList[language].ttsLanguage
-        const source = `https://translate.google.com/translate_tts?tl=${ttsLanguage}&q=${encodedText}&client=tw-ob`;
-        const audio = new Audio(source);
-        audio.play();
-        audio.addEventListener('ended', () => {
-            if (ttsList.length > 0) {
-                const newText = encodeURIComponent(ttsList.shift()!)
-                audio.src = `https://translate.google.com/translate_tts?tl=${ttsLanguage}&q=${newText}&client=tw-ob`;
-                audio.play();
-            }
-        });
-    };
+
+        if (!audioObject.paused) {
+            audioObject.pause()
+        } else {
+            const source = `https://translate.google.com/translate_tts?tl=${ttsLanguage}&q=${encodedText}&client=tw-ob`;
+            audioObject.src = source
+            audioObject.play();
+            audioObject.addEventListener('ended', () => {
+                if (ttsList.length > 0) {
+                    const newText = encodeURIComponent(ttsList.shift()!)
+                    audioObject.src = `https://translate.google.com/translate_tts?tl=${ttsLanguage}&q=${newText}&client=tw-ob`;
+                    audioObject.play();
+                }
+            });
+        }
+    }
+
 
     const screens = [
         {
@@ -137,13 +111,13 @@ export function SecondaryInfoDisplay() {
         {
             options: [
                 {
-                    element: () => <DescriptionLanguage language={languagesList[language].name}  />,
+                    element: () => <DescriptionLanguage language={languagesList[language].name} />,
                     action1: () => languageHandler(language <= 1 ? 0 : language - 1),
                     action2: () => languageHandler(language >= languagesList.length - 1 ? languagesList.length - 1 : language + 1),
                 },
                 {
-                    element: () => <ReadDescription speak={speak} />,
-                    action3: () => speak()
+                    element: () => <ReadDescription handlePlayDescription={handlePlayDescription} />,
+                    action3: () => handlePlayDescription()
                 }
             ]
         },
@@ -174,7 +148,8 @@ export function SecondaryInfoDisplay() {
         setSelectedItem(0)
         setSelectedEF(-1)
         setSelectedET(-1)
-    }, [selectedPokemon])
+        audioObject.pause()
+    }, [selectedPokemon, infoOption])
 
     useEffect(() => {
         setCryVolume(volume)
@@ -183,7 +158,7 @@ export function SecondaryInfoDisplay() {
 
     useEffect(() => {
         playBeep()
-    }, [selectedItem, isItemSelected, language, selectedEF, selectedET, isShiny ])
+    }, [selectedItem, isItemSelected, language, selectedEF, selectedET, isShiny])
 
     return <>
         <Container>
