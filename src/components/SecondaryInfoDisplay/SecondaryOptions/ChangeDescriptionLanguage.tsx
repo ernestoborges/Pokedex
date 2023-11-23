@@ -23,8 +23,4 @@ const Container = styled.div`
     justify-content: space-between;
     padding: 1rem;
     cursor: pointer;
-    
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
 `

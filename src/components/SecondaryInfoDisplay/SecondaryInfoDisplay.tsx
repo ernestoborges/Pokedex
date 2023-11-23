@@ -230,6 +230,10 @@ const Container = styled.div`
     display: flex;
     align-items: stretch;
     gap: 1rem;
+
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 `
 
 const Display = styled.div`

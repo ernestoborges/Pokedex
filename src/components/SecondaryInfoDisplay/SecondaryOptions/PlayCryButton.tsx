@@ -29,6 +29,7 @@ const Button = styled.button`
     border-radius: 0.4rem;
     display: flex;
     align-items: center;
+    cursor:pointer;
 
     & > svg {
         font-size: 2rem;

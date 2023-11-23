@@ -7,13 +7,13 @@ import { WaveSurferComponent } from "./WaveSurfer";
 
 export function Cry() {
 
-    const { selectedPokemon } = usePokemonList()
+    const { selectedPokemon, isShiny } = usePokemonList()
     const {
         canvasRef1,
         canvasRef2,
     } = useCryAudio()!
 
-    let pictureURL = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${selectedPokemon.id}.png`
+    let pictureURL = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${isShiny ? "shiny/" : ""}${selectedPokemon.id}.png`
 
 
     useEffect(() => {

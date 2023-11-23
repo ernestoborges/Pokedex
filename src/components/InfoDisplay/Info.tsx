@@ -117,6 +117,7 @@ const Section = styled.section`
     flex-grow: 1;
     padding: 0.6rem;
     text-transform: uppercase;
+    
 `
 
 const LeftSection = styled.div`

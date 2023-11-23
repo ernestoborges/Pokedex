@@ -161,6 +161,10 @@ const Container = styled.section`
     align-items: center;
     padding: 0 2rem;
 
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+
     @media (max-width: 420px){
         padding: 0 1rem;
         width: 100%;
