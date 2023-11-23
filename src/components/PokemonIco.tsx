@@ -1,6 +1,14 @@
 import styled from "styled-components"
 
-export function PokemonIco({ id, name, className }: { id: string, name: string, className: string }) {
+export function PokemonIco({
+    id,
+    name,
+    className
+}: {
+    id: string,
+    name: string,
+    className?: string
+}) {
 
     const url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/icons/${id}.png`
 

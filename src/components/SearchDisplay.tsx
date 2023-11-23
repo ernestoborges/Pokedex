@@ -28,9 +28,17 @@ const ListItem = React.memo(({
         const data = fixedNameMap.get(pokemon.name)
         fixedName = data!.name
     }
+
+    const { fetchPokemon } = usePokemonList();
     return (
         <li
-            onClick={() => setSelectedItemIndex(index)}
+            onClick={() => {
+                if (isSelected) {
+                    fetchPokemon(index)
+                } else {
+                    setSelectedItemIndex(index)
+                }
+            }}
             style={{ cursor: "pointer" }}
         >
             <PokemonIco
@@ -101,8 +109,8 @@ export function SearchDisplay() {
         }
     }
 
-    useEffect(()=>{
-        if(isFirstBeep){
+    useEffect(() => {
+        if (isFirstBeep) {
             setIsFirstBeep(false)
         } else {
             playBeep()

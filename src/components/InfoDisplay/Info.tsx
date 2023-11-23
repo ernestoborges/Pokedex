@@ -2,11 +2,11 @@ import styled from "styled-components"
 import { usePokemonList } from "../../providers/PokemonListProvider"
 import { fixedNameMap } from "../../utils/pokemons-fixed-names"
 import { PokemonTypeLabel } from "../PokemonTypeLabel"
-import {AiFillStar} from "react-icons/ai"
+import { AiFillStar } from "react-icons/ai"
 
 export function Info() {
 
-    const { selectedPokemon: pokemon } = usePokemonList()
+    const { selectedPokemon: pokemon, isShiny } = usePokemonList()
 
     let fixedName
     if (pokemon.name.includes("-")) {
@@ -14,7 +14,7 @@ export function Info() {
         fixedName = data!.name
     }
 
-    let pictureURL = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`
+    let pictureURL = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${isShiny ? "shiny/" : ""}${pokemon.id}.png`
     let footprintURL = `https://veekun.com/dex/media/pokemon/footprints/${pokemon.id}.png`
     let defaultFootprintURL = `https://veekun.com/dex/media/pokemon/footprints/11.png`
 
@@ -23,6 +23,9 @@ export function Info() {
             <LeftSection>
                 <Picture>
                     <div>
+                        <span>
+                            {isShiny ? "✨" : ""}
+                        </span>
                         <img
                             src={pictureURL}
                             alt={`${pokemon.name} Pokemon picture`}
@@ -151,6 +154,14 @@ const Picture = styled.div`
         display: flex;
         justify-content: center;
         overflow: hidden;
+        position: relative;
+
+        & > span {
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-size: 2rem;
+        }
 
         & > img {
             width: 9rem;

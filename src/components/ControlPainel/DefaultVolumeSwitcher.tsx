@@ -20,6 +20,9 @@ export function DefaultVolumeSwitcher({
                 min="0"
                 step="0.1"
                 onChange={(e) => setVolume(e.target.value)}
+                onClick={(e: any)=> e.preventDefault()}
+                onKeyDown={(e: any)=> e.preventDefault()}
+                onKeyUp={(e: any)=> e.preventDefault()}
             />
         </Container>
     </>

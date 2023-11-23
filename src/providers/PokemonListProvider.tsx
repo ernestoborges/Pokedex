@@ -10,6 +10,8 @@ interface IPokemonListContext {
     selectedPokemon: any;
     pokemonList: IPokemonList[];
     fetchPokemon: (pokemonListIndex: number) => void
+    isShiny: boolean
+    toggleShiny: () => void
 }
 
 const PokemonListContext = createContext<IPokemonListContext | null>(null);
@@ -18,26 +20,42 @@ export function PokemonListProvider({ children }: { children: React.ReactNode })
 
     const [pokemonList, setPokemonList] = useState<IPokemonList[]>([]);
     const [selectedPokemon, setSelectedPokemon] = useState(null);
+    const [isShiny, setIsShiny] = useState(false);
 
     async function fetchPokemon(pokemonListIndex: number) {
         if (pokemonList) {
+            //pokemon data
             let url = pokemonList[pokemonListIndex].url
             let response = await fetch(
                 url,
                 { method: "GET" }
             )
             let data = await response.json()
+
+            //specie data
             let specieUrl = data.species.url
             let specieResponse = await fetch(
                 specieUrl,
                 { method: "GET" }
             )
-            let speciaData = await specieResponse.json()
+            let specieData = await specieResponse.json()
+            
+            //evolution chain data
+            let evoChainUrl = specieData.evolution_chain.url
+            let evoChainResponse = await fetch(
+                evoChainUrl,
+                { method: "GET" }
+            )
+            let evoChainData = await evoChainResponse.json()
+
 
             setSelectedPokemon({
                 ...data,
                 specie_data: {
-                    ...speciaData
+                    ...specieData
+                },
+                evo_chain_data:{
+                    ...evoChainData
                 }
             })
         }
@@ -53,6 +71,11 @@ export function PokemonListProvider({ children }: { children: React.ReactNode })
         setPokemonList(data.results)
     }
 
+    function toggleShiny() {
+        setIsShiny(!isShiny)
+        console.log(selectedPokemon)
+    }
+
     useEffect(() => {
         fetchPokemon(0)
     }, [pokemonList])
@@ -62,7 +85,13 @@ export function PokemonListProvider({ children }: { children: React.ReactNode })
     }, [])
 
     return (
-        <PokemonListContext.Provider value={{ pokemonList, fetchPokemon, selectedPokemon }}>
+        <PokemonListContext.Provider value={{
+            pokemonList,
+            fetchPokemon,
+            selectedPokemon,
+            isShiny,
+            toggleShiny
+        }}>
             {children}
         </PokemonListContext.Provider>
     );

@@ -3,7 +3,7 @@ import { usePokemonList } from "../providers/PokemonListProvider"
 
 export function MainDisplay() {
 
-    const { selectedPokemon } = usePokemonList()
+    const { selectedPokemon, isShiny } = usePokemonList()
 
     return <>
         <Container>
@@ -14,7 +14,7 @@ export function MainDisplay() {
                         {
                             selectedPokemon &&
                             <img
-                                src={`https://projectpokemon.org/images/normal-sprite/${selectedPokemon.name}.gif`}
+                                src={`https://projectpokemon.org/images/${isShiny ? "shiny" : "normal"}-sprite/${selectedPokemon.name}.gif`}
                                 alt={`Pokemon ${selectedPokemon.name}`}
                             />
                         }
@@ -64,7 +64,6 @@ const Circle = styled.div`
         width:100%;
         height: 100%;
         border-radius: 100%;
-        // border: 0.1rem solid var(--shadow-color);
         & > div {
             border: 0.1rem solid #901020;
             border-top: 0rem;

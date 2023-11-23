@@ -11,18 +11,31 @@ import { useDescriptionText } from "../../providers/DescriptionTextProvider";
 import { ReadDescription } from "./SecondaryOptions/ReadDescriptionButton";
 import { usePokemonList } from "../../providers/PokemonListProvider";
 import { useBeepAudio } from "../../providers/BeepAudioProvider";
+import { ShinySelection } from "./SecondaryOptions/ShinySelections";
+import { EvolvesFrom } from "./SecondaryOptions/EvolvesFrom";
+import { getEvolutionChainNodes } from "../../utils/get-evulution-chain-nodes";
+import { EvolvesTo } from "./SecondaryOptions/EvolvesTo";
+import { getIdFromSpecieURL } from "../../utils/get-id-from-specie-url";
 
 export function SecondaryInfoDisplay() {
 
     const { option: infoOption } = useInfoOption();
     const { playCry, setCryVolume } = useCryAudio()!
     const { language, languageHandler, languagesList, descriptionText } = useDescriptionText();
-    const { selectedPokemon } = usePokemonList();
+    const { selectedPokemon, toggleShiny, isShiny } = usePokemonList();
     const { playBeep } = useBeepAudio()!;
 
     const [volume, setVolume] = useState(0.6)
     const [isItemSelected, setIsItemSelected] = useState(false);
     const [selectedItem, setSelectedItem] = useState<number>(0);
+
+    const evoNodes = getEvolutionChainNodes(selectedPokemon)
+    const pokemonChainLevel = evoNodes.find((p: any) => getIdFromSpecieURL(p.species.url) == selectedPokemon.id).chain_level
+
+    const [selectedEF, setSelectedEF] = useState(-1);
+    const evolvesFrom = evoNodes.reverse().filter((evo: any) => evo.chain_level === pokemonChainLevel - 1)
+    const [selectedET, setSelectedET] = useState(-1);
+    const evolvesTo = evoNodes.reverse().filter((evo: any) => evo.chain_level === pokemonChainLevel + 1)
 
     const moveUp = () => {
         if (selectedItem > 0) {
@@ -92,15 +105,39 @@ export function SecondaryInfoDisplay() {
         {
             options: [
                 {
-                    element: () => <>a</>,
-                    action3: () => alert("hi"),
+                    element: () => <ShinySelection />,
+                    action3: () => toggleShiny(),
                 },
-            ]
+                {
+                    element: evolvesFrom.length > 0
+                        ? (i: number) => <EvolvesFrom
+                            from={evolvesFrom}
+                            selectedItem={selectedEF}
+                            isThisSelected={selectedItem === i}
+                            isItemSelected={isItemSelected}
+                        />
+                        : null,
+                    action1: () => setSelectedEF(selectedEF < evolvesFrom.length - 1 ? selectedEF + 1 : -1),
+                    action2: () => setSelectedEF(selectedEF > 0 ? selectedEF - 1 : evolvesFrom.length - 1),
+                },
+                {
+                    element: evolvesTo.length > 0
+                        ? (i: number) => <EvolvesTo
+                            to={evolvesTo}
+                            selectedItem={selectedET}
+                            isThisSelected={selectedItem === i}
+                            isItemSelected={isItemSelected}
+                        />
+                        : null,
+                    action1: () => setSelectedET(selectedET < evolvesTo.length - 1 ? selectedET + 1 : -1),
+                    action2: () => setSelectedET(selectedET > 0 ? selectedET - 1 : evolvesTo.length - 1),
+                }
+            ].filter(o => o.element)
         },
         {
             options: [
                 {
-                    element: () => <DescriptionLanguage language={languagesList[language].name} />,
+                    element: () => <DescriptionLanguage language={languagesList[language].name}  />,
                     action1: () => languageHandler(language <= 1 ? 0 : language - 1),
                     action2: () => languageHandler(language >= languagesList.length - 1 ? languagesList.length - 1 : language + 1),
                 },
@@ -135,7 +172,9 @@ export function SecondaryInfoDisplay() {
 
     useEffect(() => {
         setSelectedItem(0)
-    }, [infoOption])
+        setSelectedEF(-1)
+        setSelectedET(-1)
+    }, [selectedPokemon])
 
     useEffect(() => {
         setCryVolume(volume)
@@ -144,7 +183,7 @@ export function SecondaryInfoDisplay() {
 
     useEffect(() => {
         playBeep()
-    }, [selectedItem, isItemSelected, language])
+    }, [selectedItem, isItemSelected, language, selectedEF, selectedET, isShiny ])
 
     return <>
         <Container>
@@ -152,14 +191,14 @@ export function SecondaryInfoDisplay() {
                 <div>
                     <ul>
                         {
-                            infoOption &&
+                            infoOption !== null &&
                             screens[infoOption].options!.map((option, index) =>
-                                option &&
+                                option.element &&
                                 <li
                                     key={index}
                                     className={`${selectedItem === index ? isItemSelected ? "selected-item" : "marked-item" : ""}`}
                                 >
-                                    {option.element()}
+                                    {option.element(index)}
                                 </li>
                             )
                         }
@@ -186,7 +225,7 @@ export function SecondaryInfoDisplay() {
                     keyName="ArrowRight"
                     keyLabel={<BiRightArrow />}
                     functionHandler={
-                        infoOption &&
+                        infoOption !== null &&
                             screens[infoOption].options.length - 1 >= selectedItem &&
                             'action3' in screens[infoOption].options[selectedItem]
                             ? screens[infoOption!].options[selectedItem].action3!
@@ -223,6 +262,11 @@ const Display = styled.div`
     border-radius: 1rem;
     padding-top: 0.6rem;
     color: var(--shadow-color);
+    text-shadow: 
+        0px 1px 0px var(--game-font-shadow),
+        1px 0px 0px var(--game-font-shadow),
+        1px 1px 0px var(--game-font-shadow)
+    ;
     
     & > div {
         position: relative;
@@ -235,6 +279,11 @@ const Display = styled.div`
         overflow: hidden;
         background-color: var(--light-gray);
         padding: 0.6rem;
+    }
+    
+    & ul {
+        overflow-y: auto;
+        height: 100%;
     }
 
     & li {
