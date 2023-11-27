@@ -77,6 +77,13 @@ body {
   align-items: center;
   min-width: 320px;
   min-height: 100vh;
+
+  background-image: url("/images/pokedex-bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+
+  
 }
 
 button {
