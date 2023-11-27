@@ -31,7 +31,14 @@ export function HexbinGraph({ stats }: {
         speed: 255
     }
 
-    let baseStats = {}
+    let baseStats: IBaseStat = {
+        hp: 0,
+        atk: 0,
+        sp_atk: 0,
+        def: 0,
+        sp_def: 0,
+        speed: 0
+    }
 
     stats.forEach(s => {
         baseStats = {
@@ -62,12 +69,12 @@ export function HexbinGraph({ stats }: {
                     <div className="line" />
                 </div>
                 <div className="stats-labels text-shadow">
-                    <span>HP</span>
-                    <span>ATK</span>
-                    <span>DEF</span>
-                    <span>SPEED</span>
-                    <span>SP.DEF</span>
-                    <span>SP.ATK</span>
+                    <div><span>HP</span> <span>{baseStats.hp}</span></div>
+                    <div><span>ATK</span><span>{baseStats.atk}</span></div>
+                    <div><span>DEF</span><span>{baseStats.def}</span></div>
+                    <div><span>SPEED</span><span>{baseStats.speed}</span></div>
+                    <div><span>SP.DEF</span><span>{baseStats.sp_atk}</span></div>
+                    <div><span>SP.ATK</span><span>{baseStats.sp_def}</span></div>
                 </div>
             </div>
         </Container>
@@ -103,40 +110,43 @@ const Container = styled.div`
             width: 100%;
             height: 100%;
 
-            & > span {
+            & > div {
                 position: absolute;
                 transform: translate(-50%, -50%);
                 z-index: 10;
                 color: var(--border-color);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
                 
                 &:nth-child(1){
-                    top: -15%;
+                    top: -25%;
                     left: 50%;
                 }
 
                 &:nth-child(2){
                     top: 10%;
-                    left: 100%;
+                    left: 110%;
                 }
 
                 &:nth-child(3){
                     top: 94%;
-                    left: 100%;
+                    left: 110%;
                 }
 
                 &:nth-child(4){
-                    top: 120%;
+                    top: 130%;
                     left: 50%;
                 }
 
                 &:nth-child(5){
                     top: 94%;
-                    left: -5%;
+                    left: -15%;
                 }
 
                 &:nth-child(6){
                     top: 10%;
-                    left: -5%;
+                    left: -15%;
                 }
             }
         }

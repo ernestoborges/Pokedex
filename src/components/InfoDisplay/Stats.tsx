@@ -2,27 +2,38 @@ import styled from "styled-components"
 import { usePokemonList } from "../../providers/PokemonListProvider"
 import { HexbinGraph } from "../HexbinGraph"
 import { shortenedStatName } from "../../utils/convert-stat-name"
+import { maxStat, minStat } from "../../utils/max-min-stats"
+import { BarsGraph } from "../BarsGraph"
+import { useInfoOption } from "../../providers/InfoOptionProvider"
 
 export function Stats() {
 
     const { selectedPokemon: pokemon } = usePokemonList()
+    const { isGraphHex } = useInfoOption()
 
     return <>
         <Section>
             <LeftSection>
                 <Chart>
-                    <HexbinGraph stats={pokemon.stats} />
+                    {
+                        isGraphHex
+                            ? <HexbinGraph stats={pokemon.stats} />
+                            : <BarsGraph stats={pokemon.stats} />
+                    }
                 </Chart>
             </LeftSection>
             <RightSection>
                 <MainInfo>
                     <div>
                         <ul>
+                            <li><span>STAT</span><span>BASE</span><span>MIN</span><span>MAX</span></li>
                             {
                                 pokemon.stats.map((s: any, i: number) =>
                                     <li key={i}>
                                         <span>{shortenedStatName(s.stat.name)}:</span>
                                         <span>{s.base_stat}</span>
+                                        <span>{minStat(s.stat.name, s.base_stat)}</span>
+                                        <span>{maxStat(s.stat.name, s.base_stat)}</span>
                                     </li>
                                 )
                             }
@@ -53,7 +64,7 @@ const RightSection = styled.div`
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
 `
 
 
@@ -78,7 +89,7 @@ const Canva = styled.article`
         & > ul {
             display: flex;
             flex-direction: column;
-            gap:1rem;
+            gap:0.4rem;
 
             & > li {
                 border-bottom: 0.2rem dashed gray;
@@ -89,11 +100,22 @@ const Canva = styled.article`
                     display: flex;
                     align-items: flex-end;
                     gap: 0.4rem;
-
+                    flex-grow: 0;
+                    width: 3rem;
+                    justify-content: flex-end; 
                     & > span {
                         width: 1.4rem;
                         display: flex;
                     }
+
+                    &:first-child{
+                    justify-content: flex-start; 
+                    flex-grow: 1;
+                    }
+                }
+
+                &:first-child {
+                    font-weight: bold;
                 }
             }
         }

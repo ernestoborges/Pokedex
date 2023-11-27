@@ -17,10 +17,11 @@ import { getEvolutionChainNodes } from "../../utils/get-evulution-chain-nodes";
 import { EvolvesTo } from "./SecondaryOptions/EvolvesTo";
 import { getIdFromSpecieURL } from "../../utils/get-id-from-specie-url";
 import { textToSpeech } from "../../utils/text-to-speech";
+import { GraphStyle } from "./SecondaryOptions/ChangeGraphStyle";
 
 export function SecondaryInfoDisplay() {
 
-    const { option: infoOption } = useInfoOption();
+    const { option: infoOption, isGraphHex, graphToggle } = useInfoOption();
     const { playCry, setCryVolume } = useCryAudio()!
     const { language, languageHandler, languagesList, descriptionText, audioObject } = useDescriptionText();
     const { selectedPokemon, toggleShiny, isShiny } = usePokemonList();
@@ -124,8 +125,8 @@ export function SecondaryInfoDisplay() {
         {
             options: [
                 {
-                    element: () => <>c</>,
-                    action3: () => alert("hi"),
+                    element: () => <GraphStyle isGraphHex={isGraphHex} graphToggle={graphToggle} />,
+                    action3: () => graphToggle(),
                 },
             ]
         },
@@ -158,7 +159,7 @@ export function SecondaryInfoDisplay() {
 
     useEffect(() => {
         playBeep()
-    }, [selectedItem, isItemSelected, language, selectedEF, selectedET, isShiny])
+    }, [selectedItem, isItemSelected, language, selectedEF, selectedET, isShiny, isGraphHex])
 
     return <>
         <Container>
