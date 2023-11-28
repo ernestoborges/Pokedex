@@ -18,4 +18,7 @@ export function ShinySelection() {
 const Container = styled.div`
     padding: 0.6rem 0;
     cursor: pointer;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
 `
