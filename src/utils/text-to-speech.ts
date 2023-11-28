@@ -3,7 +3,6 @@ export async function textToSpeech(
 ) {
 
     let text = string.split(". ").join(".").split(", ").join(",")
-    console.log(text)
     let ttsList: string[] = []
 
     if (text.length > 100) {

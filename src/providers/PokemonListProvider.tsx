@@ -48,7 +48,6 @@ export function PokemonListProvider({ children }: { children: React.ReactNode })
             )
             let evoChainData = await evoChainResponse.json()
 
-
             setSelectedPokemon({
                 ...data,
                 specie_data: {
@@ -73,7 +72,6 @@ export function PokemonListProvider({ children }: { children: React.ReactNode })
 
     function toggleShiny() {
         setIsShiny(!isShiny)
-        console.log(selectedPokemon)
     }
 
     useEffect(() => {
