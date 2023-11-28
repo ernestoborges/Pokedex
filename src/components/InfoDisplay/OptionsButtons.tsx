@@ -6,6 +6,7 @@ export const optionsList = [
     { keyName: "2", option: 1 },
     { keyName: "3", option: 2 },
     { keyName: "4", option: 3 },
+    { keyName: "5", option: 4 },
 ]
 
 export function OptionsButtons() {

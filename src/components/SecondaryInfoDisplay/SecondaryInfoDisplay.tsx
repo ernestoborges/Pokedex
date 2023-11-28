@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { useInfoOption } from "../../providers/InfoOptionProvider"
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCryAudio } from "../../providers/CryAudioProvider";
 import { BiUpArrow, BiDownArrow, BiRightArrow } from "react-icons/bi"
 import { Button } from "../Button";
@@ -18,10 +18,15 @@ import { EvolvesTo } from "./SecondaryOptions/EvolvesTo";
 import { getIdFromSpecieURL } from "../../utils/get-id-from-specie-url";
 import { textToSpeech } from "../../utils/text-to-speech";
 import { GraphStyle } from "./SecondaryOptions/ChangeGraphStyle";
+import { MoveSelector } from "./SecondaryOptions/MoveSelector";
+
+let itemHeight = 25;
 
 export function SecondaryInfoDisplay() {
 
-    const { option: infoOption, isGraphHex, graphToggle } = useInfoOption();
+    const listRef: React.RefObject<HTMLUListElement> = useRef(null);
+
+    const { option: infoOption, isGraphHex, graphToggle, selectedMove, fetchMove } = useInfoOption();
     const { playCry, setCryVolume } = useCryAudio()!
     const { language, languageHandler, languagesList, descriptionText, audioObject } = useDescriptionText();
     const { selectedPokemon, toggleShiny, isShiny } = usePokemonList();
@@ -42,13 +47,38 @@ export function SecondaryInfoDisplay() {
     const fullTextoToRead = (translatedName ? translatedName + "." : "") + descriptionText.join(" ").split("\n").join(" ")
 
     const moveUp = () => {
+
+
         if (selectedItem > 0) {
             setSelectedItem(selectedItem - 1)
+            let newSelectionPosition = selectedItem - 1
+
+            if (listRef.current) {
+                let currentScrollY = listRef.current.scrollTop
+                if (
+                    newSelectionPosition * itemHeight < currentScrollY ||
+                    newSelectionPosition * itemHeight > currentScrollY + (itemHeight * 4)
+                ) {
+                    listRef.current.scrollTop = newSelectionPosition * itemHeight
+                }
+            }
         }
+
+
     }
     const moveDown = () => {
         if (selectedItem < screens[infoOption].options.length - 1) {
             setSelectedItem(selectedItem + 1)
+            let newSelectionPosition = selectedItem + 1
+            if (listRef.current) {
+                let currentScrollY = listRef.current.scrollTop
+                if (
+                    newSelectionPosition * itemHeight < currentScrollY ||
+                    newSelectionPosition * itemHeight > currentScrollY + (itemHeight * 5)
+                ) {
+                    listRef.current.scrollTop = (newSelectionPosition * itemHeight) - (itemHeight * 5)
+                }
+            }
         }
     }
 
@@ -131,6 +161,12 @@ export function SecondaryInfoDisplay() {
             ]
         },
         {
+            options: selectedPokemon.moves.map((move: any, index: number) => ({
+                element: () => <MoveSelector move={move} fetchMove={fetchMove} setSelectedItem={setSelectedItem} index={index} />,
+                action3: () => fetchMove(move.move.url)
+            }))
+        },
+        {
             options: [
                 {
                     element: () => <PlayCryButton />,
@@ -150,6 +186,7 @@ export function SecondaryInfoDisplay() {
         setSelectedEF(-1)
         setSelectedET(-1)
         audioObject.pause()
+        fetchMove(selectedPokemon.moves[0].move.url)
     }, [selectedPokemon, infoOption])
 
     useEffect(() => {
@@ -159,16 +196,16 @@ export function SecondaryInfoDisplay() {
 
     useEffect(() => {
         playBeep()
-    }, [selectedItem, isItemSelected, language, selectedEF, selectedET, isShiny, isGraphHex])
+    }, [selectedItem, isItemSelected, language, selectedEF, selectedET, isShiny, isGraphHex, selectedMove])
 
     return <>
         <Container>
             <Display>
                 <div>
-                    <ul>
+                    <ul ref={listRef}>
                         {
                             infoOption !== null &&
-                            screens[infoOption].options!.map((option, index) =>
+                            screens[infoOption].options!.map((option: any, index: number) =>
                                 option.element &&
                                 <li
                                     key={index}

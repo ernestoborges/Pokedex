@@ -60,8 +60,9 @@
   --type-fairy: #ec8fe6;
   --type-default: transperent;
 
-  
-
+  --category-physical: #C92112;
+  --category-special: #4F5870;
+  --category-status: #8C888C;
 }
 
 * { 
