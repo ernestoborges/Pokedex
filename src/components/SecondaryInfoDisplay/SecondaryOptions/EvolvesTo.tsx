@@ -59,6 +59,9 @@ const Container = styled.div`
                 background-color: var(--shadow-color);
                 cursor: pointer;
             }
+            & > div {
+                max-width: 3.6rem;
+            }
         }
     }
 
