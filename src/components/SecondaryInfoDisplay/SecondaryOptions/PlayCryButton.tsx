@@ -10,7 +10,7 @@ export function PlayCryButton() {
         <Container>
             <Button onClick={() => playCry()}>
                 <BsCaretRightFill  />
-                Play
+                <span>Play</span>
             </Button>
         </Container>
     </>
@@ -25,12 +25,18 @@ const Container = styled.div`
 
 const Button = styled.button`
     padding: 0.6rem;
-    border: 0.1rem solid var(--border-color);
+    border: 0.1rem solid var(--dark-gray);
+    color: var(--dark-gray);
     border-radius: 0.4rem;
     display: flex;
     align-items: center;
+    font-weight: bold;
     cursor:pointer;
-
+    
+    & > span {
+        margin-top: 0.3rem;
+    }
+    
     & > svg {
         font-size: 2rem;
     }
