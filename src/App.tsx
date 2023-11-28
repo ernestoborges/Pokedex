@@ -8,13 +8,14 @@ import { OptionsButtons } from "./components/InfoDisplay/OptionsButtons";
 import { usePokemonList } from "./providers/PokemonListProvider";
 import { SecondaryInfoDisplay } from "./components/SecondaryInfoDisplay/SecondaryInfoDisplay";
 import { ControlPainel } from "./components/ControlPainel/ControlPainel";
+import { PokeballSpinLoading } from "./components/PokeballSpinLoading";
 
 export default function App() {
 
   const { selectedPokemon } = usePokemonList()
-
+  
   if (!selectedPokemon) {
-    return <>loading...</>
+    return <PokeballSpinLoading />
   }
 
   return (
