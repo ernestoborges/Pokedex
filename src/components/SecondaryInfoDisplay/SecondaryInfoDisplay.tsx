@@ -300,7 +300,7 @@ const Display = styled.div`
     
     & ul {
         overflow-y: auto;
-        height: 100%;
+        height: 14.8rem;
     }
 
     & li {
