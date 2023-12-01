@@ -70,10 +70,10 @@ export function ActionButtons({
 
     return <>
         <ActionButtonsContainer>
-            <AButton onClick={() => fetchPokemon(selectedItemId - 1)} isPressed={keysPressed["k"]}>
+            <AButton onClick={handleButtonK} isPressed={keysPressed["k"]}>
                 <div>K</div>
             </AButton>
-            <AButton onClick={() => setIsKeyboardOpened((prev: boolean) => !prev)} isPressed={keysPressed["l"]}>
+            <AButton onClick={handleButtonL} isPressed={keysPressed["l"]}>
                 <div>L</div>
             </AButton>
         </ActionButtonsContainer>
