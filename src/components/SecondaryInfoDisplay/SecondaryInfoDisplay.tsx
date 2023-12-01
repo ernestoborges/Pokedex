@@ -57,7 +57,7 @@ export function SecondaryInfoDisplay() {
                 let currentScrollY = listRef.current.scrollTop
                 if (
                     newSelectionPosition * itemHeight < currentScrollY ||
-                    newSelectionPosition * itemHeight > currentScrollY + (itemHeight * 4)
+                    newSelectionPosition * itemHeight > currentScrollY + (itemHeight * 5)
                 ) {
                     listRef.current.scrollTop = newSelectionPosition * itemHeight
                 }
