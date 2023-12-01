@@ -1,9 +1,15 @@
 import styled from "styled-components"
 import { usePokemonList } from "../providers/PokemonListProvider"
+import { fixedNameMap } from "../utils/pokemons-fixed-names"
 
 export function MainDisplay() {
 
     const { selectedPokemon, isShiny } = usePokemonList()
+    let fixedName
+    if (selectedPokemon.name.includes("-")) {
+        const data = fixedNameMap.get(selectedPokemon.name)
+        fixedName = data!.gif
+    }
 
     return <>
         <Container>
@@ -14,8 +20,8 @@ export function MainDisplay() {
                         {
                             selectedPokemon &&
                             <img
-                                src={`https://projectpokemon.org/images/${isShiny ? "shiny" : "normal"}-sprite/${selectedPokemon.name}.gif`}
-                                alt={`Pokemon ${selectedPokemon.name}`}
+                                src={`https://projectpokemon.org/images/${isShiny ? "shiny" : "normal"}-sprite/${fixedName ? fixedName : selectedPokemon.name}.gif`}
+                                alt={`Pokemon ${fixedName ? fixedName : selectedPokemon.name}`}
                             />
                         }
                     </div>
