@@ -208,6 +208,7 @@ export function SecondaryInfoDisplay() {
                                 <li
                                     key={index}
                                     className={`${selectedItem === index ? isItemSelected ? "selected-item" : "marked-item" : ""}`}
+                                    style={{height: infoOption === 3 ? "2.5rem" : "auto"}}
                                 >
                                     {option.element(index)}
                                 </li>

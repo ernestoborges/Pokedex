@@ -28,5 +28,4 @@ const Container = styled.div`
     text-transform: uppercase;
     padding: 0.4rem 0 0.2rem;
     cursor: pointer;
-    height: 2.1rem;
 `
