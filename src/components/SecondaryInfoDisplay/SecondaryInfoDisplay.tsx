@@ -200,7 +200,7 @@ export function SecondaryInfoDisplay() {
         <Container>
             <Display>
                 <div>
-                    <ul ref={listRef}>
+                    <ul ref={listRef} className="secondary-options-list">
                         {
                             infoOption !== null &&
                             screens[infoOption].options!.map((option: any, index: number) =>
@@ -300,8 +300,9 @@ const Display = styled.div`
         padding: 0.6rem;
     }
     
-    & ul {
+    & .secondary-options-list {
         overflow-y: auto;
+        height: 14.8rem;
     }
 
     & li {
