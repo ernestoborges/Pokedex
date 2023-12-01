@@ -49,8 +49,6 @@ export function SecondaryInfoDisplay() {
     const fullTextoToRead = (translatedName ? translatedName + "." : "") + descriptionText.join(" ").split("\n").join(" ")
 
     const moveUp = () => {
-
-
         if (selectedItem > 0) {
             setSelectedItem(selectedItem - 1)
             let newSelectionPosition = selectedItem - 1
@@ -65,8 +63,6 @@ export function SecondaryInfoDisplay() {
                 }
             }
         }
-
-
     }
     const moveDown = () => {
         if (selectedItem < screens[infoOption].options.length - 1) {

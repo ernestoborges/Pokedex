@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { useSeachFilter } from "../../providers/SearchFilterProvider"
 import { keys } from "../../utils/keyboard-keys"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useBeepAudio } from "../../providers/BeepAudioProvider"
 
 function Key({
@@ -47,14 +47,33 @@ export function Keyboard() {
         handleKeyAction
     } = useSeachFilter();
 
-    const { playBeep } = useBeepAudio()!;
+    const { playBeep, playSwipeIn, playSwipeOut } = useBeepAudio()!;
+
+    const [fistRender, setFirstRender] = useState(true);
+
 
     function handleSelectedKey(index: number) {
         return selectedKey === index
     }
 
     useEffect(() => {
-        playBeep()
+        if (!fistRender) {
+            if (!isKeyboardOpened) {
+                playSwipeOut()
+            } else {
+                playSwipeIn()
+            }
+        } else {
+            setFirstRender(false)
+        }
+    }, [isKeyboardOpened])
+
+    useEffect(() => {
+        if (!fistRender) {
+            playBeep()
+        } else {
+            setFirstRender(false)
+        }
     }, [filterText, selectedKey])
 
     return <Container
