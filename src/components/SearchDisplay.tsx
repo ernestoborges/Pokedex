@@ -8,6 +8,8 @@ import { ActionButtons } from "./ActionButtons"
 import { fixedNameMap } from "../utils/pokemons-fixed-names"
 import { useCryAudio } from "../providers/CryAudioProvider"
 import { useBeepAudio } from "../providers/BeepAudioProvider"
+import { Keyboard } from "./KeyboardModal/Keyboard"
+import { useSeachFilter } from "../providers/SearchFilterProvider"
 
 const itemHeight = 34
 
@@ -34,7 +36,7 @@ const ListItem = React.memo(({
         <li
             onClick={() => {
                 if (isSelected) {
-                    fetchPokemon(index)
+                    fetchPokemon(parseInt(id)-1)
                 } else {
                     setSelectedItemIndex(index)
                 }
@@ -64,9 +66,11 @@ const ListItem = React.memo(({
 export function SearchDisplay() {
 
     const { pokemonList, selectedPokemon } = usePokemonList()
-    const listSize = pokemonList.length
+    const [filteredPokemonList, setFilteredPokemonList] = useState(pokemonList)
+    const listSize = filteredPokemonList.length
 
     const [selectedItemIndex, setSelectedItemIndex] = useState(0)
+    const [selectedItemId, setSelectedItemId] = useState(1)
 
     const listRef: React.RefObject<HTMLUListElement> = useRef(null);
 
@@ -75,6 +79,8 @@ export function SearchDisplay() {
 
     const { playBeep } = useBeepAudio()!
     const [isFirstBeep, setIsFirstBeep] = useState(true)
+
+    const { filterText, isInputFocus } = useSeachFilter();
 
     function moveSelectorUp(n: number) {
         if (selectedItemIndex > n - 1) {
@@ -109,10 +115,16 @@ export function SearchDisplay() {
         }
     }
 
+    useEffect(()=>{
+        setSelectedItemIndex(0)
+        setFilteredPokemonList(pokemonList.filter(p => p.name.includes(filterText.toLocaleLowerCase())))
+    }, [filterText])
+
     useEffect(() => {
         if (isFirstBeep) {
             setIsFirstBeep(false)
         } else {
+            setSelectedItemId(parseInt(filteredPokemonList[selectedItemIndex].url.split("pokemon/")[1].slice(0, -1)))
             playBeep()
         }
     }, [selectedItemIndex, selectedPokemon])
@@ -123,6 +135,7 @@ export function SearchDisplay() {
                 selectedItemIndex={selectedItemIndex}
                 moveSelectorUp={moveSelectorUp}
                 moveSelectorDown={moveSelectorDown}
+                isDisable={isInputFocus}
             />
             <DisplayContainer>
                 <Wrapper>
@@ -131,23 +144,29 @@ export function SearchDisplay() {
                         {
                             !pokemonList
                                 ? "Loading..."
-                                : pokemonList.map((pokemon, index) => {
-                                    return (
-                                        <ListItem
-                                            key={index}
-                                            index={index}
-                                            pokemon={pokemon}
-                                            isSelected={index === selectedItemIndex}
-                                            setSelectedItemIndex={setSelectedItemIndex}
-                                        />
+                                : filteredPokemonList
+                                    .map((pokemon, index) => {
+                                        return (
+                                            <ListItem
+                                                key={index}
+                                                index={index}
+                                                pokemon={pokemon}
+                                                isSelected={index === selectedItemIndex}
+                                                setSelectedItemIndex={setSelectedItemIndex}
+                                            />
+                                        )
+                                    }
                                     )
-                                }
-                                )
                         }
                     </ul>
+                    <Keyboard />
                 </Wrapper>
             </DisplayContainer>
-            <ActionButtons pokemonListIndex={selectedItemIndex} />
+            <ActionButtons
+                selectedItemId={selectedItemId}
+                pokemonListIndex={selectedItemIndex}
+                isDisable={isInputFocus}
+            />
 
             {/* audio component to emit pokemon cries */}
             <audio ref={cryAudioRef} src={cryUrl} />

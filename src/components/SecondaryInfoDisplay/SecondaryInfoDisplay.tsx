@@ -19,6 +19,7 @@ import { getIdFromSpecieURL } from "../../utils/get-id-from-specie-url";
 import { textToSpeech } from "../../utils/text-to-speech";
 import { GraphStyle } from "./SecondaryOptions/ChangeGraphStyle";
 import { MoveSelector } from "./SecondaryOptions/MoveSelector";
+import { useSeachFilter } from "../../providers/SearchFilterProvider";
 
 let itemHeight = 25;
 
@@ -31,6 +32,7 @@ export function SecondaryInfoDisplay() {
     const { language, languageHandler, languagesList, descriptionText, audioObject } = useDescriptionText();
     const { selectedPokemon, toggleShiny, isShiny } = usePokemonList();
     const { playBeep } = useBeepAudio()!;
+    const { isInputFocus } = useSeachFilter();
 
     const [volume, setVolume] = useState(0.6)
     const [isItemSelected, setIsItemSelected] = useState(false);
@@ -224,6 +226,7 @@ export function SecondaryInfoDisplay() {
                     shape="arrow-up"
                     keyName="ArrowUp"
                     keyLabel={<BiUpArrow />}
+                    isDisable={isInputFocus}
                     functionHandler={
                         isItemSelected &&
                             screens[infoOption].options[selectedItem].action1 &&
@@ -237,6 +240,7 @@ export function SecondaryInfoDisplay() {
                     shape="square"
                     keyName="ArrowRight"
                     keyLabel={<BiRightArrow />}
+                    isDisable={isInputFocus}
                     functionHandler={
                         infoOption !== null &&
                             screens[infoOption].options.length - 1 >= selectedItem &&
@@ -250,6 +254,7 @@ export function SecondaryInfoDisplay() {
                     shape="arrow-down"
                     keyName="ArrowDown"
                     keyLabel={<BiDownArrow />}
+                    isDisable={isInputFocus}
                     functionHandler={
                         isItemSelected &&
                             screens[infoOption].options[selectedItem].action2 &&
@@ -300,7 +305,6 @@ const Display = styled.div`
     
     & ul {
         overflow-y: auto;
-        height: 14.8rem;
     }
 
     & li {

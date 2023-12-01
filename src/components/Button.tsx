@@ -7,24 +7,26 @@ export function Button({
     keyLabel,
     shape,
     functionHandler,
-    selectedOption
+    selectedOption,
+    isDisable
 }: {
     keyName: string,
     keyLabel: string | React.ReactElement,
     shape: "square" | "circle" | "arrow-up" | "arrow-down"
     functionHandler: () => void
     selectedOption: number[]
+    isDisable: boolean
 }) {
 
     const [keyPressed, setKeyPressed] = useState<boolean>(false);
 
-    
+
     function handleClick() {
         functionHandler()
     }
 
     function handleKeyDown(e: any) {
-        if (e.key === keyName) {
+        if (e.key === keyName && !isDisable) {
             setKeyPressed(true);
             functionHandler()
         }

@@ -1,22 +1,40 @@
 import styled from "styled-components"
 import { usePokemonList } from "../providers/PokemonListProvider"
 import { useEffect, useState } from "react"
+import { useSeachFilter } from "../providers/SearchFilterProvider"
+import { keys } from "../utils/keyboard-keys"
 
-export function ActionButtons({ pokemonListIndex }: { pokemonListIndex: number }) {
+export function ActionButtons({
+    selectedItemId,
+    pokemonListIndex,
+    isDisable
+}: {
+    selectedItemId: number
+    pokemonListIndex: number
+    isDisable: boolean
+}) {
 
     const { fetchPokemon } = usePokemonList()
+    const { isKeyboardOpened, setIsKeyboardOpened, selectedKey, handleKeyAction } = useSeachFilter()
     const [keysPressed, setKeysPressed] = useState<{ [key: string]: boolean }>({});
 
     const keyMap = new Map([
-        ['k', handleButtonA],
+        ['k', handleButtonK],
+        ['l', handleButtonL],
     ])
 
-    function handleButtonA() {
-        fetchPokemon(pokemonListIndex)
+    function handleButtonK() {
+        if (isKeyboardOpened) {
+            handleKeyAction(keys[selectedKey])
+        } else {
+            fetchPokemon(selectedItemId - 1)
+        }
+    }
+    function handleButtonL() {
+        setIsKeyboardOpened((prev: boolean) => !prev)
     }
 
     function handleKeyDown(e: any) {
-
         if (keyMap.has(e.key.toLowerCase())) {
             keyMap.get(e.key.toLowerCase())!()
         }
@@ -25,8 +43,6 @@ export function ActionButtons({ pokemonListIndex }: { pokemonListIndex: number }
             ...prevState,
             [e.key]: true,
         }));
-
-
     };
 
     function handleKeyUp(e: any) {
@@ -38,20 +54,27 @@ export function ActionButtons({ pokemonListIndex }: { pokemonListIndex: number }
     }
 
     useEffect(() => {
-        window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('keyup', handleKeyUp);
+        if (!isDisable) {
+            window.addEventListener('keydown', handleKeyDown);
+            window.addEventListener('keyup', handleKeyUp);
+        } else {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+        }
 
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
-
         };
-    }, [pokemonListIndex])
+    }, [pokemonListIndex, isDisable, selectedItemId, isKeyboardOpened, selectedKey])
 
     return <>
         <ActionButtonsContainer>
-            <AButton onClick={() => fetchPokemon(pokemonListIndex)} isPressed={keysPressed["k"]}>
+            <AButton onClick={() => fetchPokemon(selectedItemId - 1)} isPressed={keysPressed["k"]}>
                 <div>K</div>
+            </AButton>
+            <AButton onClick={() => setIsKeyboardOpened((prev: boolean) => !prev)} isPressed={keysPressed["l"]}>
+                <div>L</div>
             </AButton>
         </ActionButtonsContainer>
     </>

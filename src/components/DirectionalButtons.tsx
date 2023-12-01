@@ -1,40 +1,60 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { isMobile } from 'react-device-detect';
+import { useSeachFilter } from "../providers/SearchFilterProvider";
 
 export function DirectionalButtons({
     selectedItemIndex,
     moveSelectorUp,
-    moveSelectorDown
+    moveSelectorDown,
+    isDisable
 }: {
     selectedItemIndex: number
     moveSelectorUp: (n: number) => void
     moveSelectorDown: (n: number) => void
+    isDisable: boolean
 }) {
 
     const [activeButton, setActiveButton] = useState<string | null>(null)
+    const {
+        isKeyboardOpened,
+        setSelectedKey
+    } = useSeachFilter();
 
     function handleButtonUp() {
         setActiveButton("W");
-        moveSelectorUp(1)
-        if ('vibrate' in navigator) {
-            navigator.vibrate(100);
+        if (isKeyboardOpened) {
+            setSelectedKey(prev => prev > 6 ? prev - 7 : prev)
+        } else {
+            moveSelectorUp(1)
         }
     }
 
     function handleButtonRight() {
         setActiveButton("D");
-        moveSelectorDown(10)
+        if (isKeyboardOpened) {
+            setSelectedKey(prev => prev < 27 ? prev + 1 : prev)
+        } else {
+            moveSelectorDown(10)
+        }
     }
 
     function handleButtonDown() {
         setActiveButton("S");
-        moveSelectorDown(1)
+        if (isKeyboardOpened) {
+            setSelectedKey(prev => prev < 21 ? prev + 7 : prev)
+        } else {
+            moveSelectorDown(1)
+        }
     }
 
     function handleButtonLeft() {
         setActiveButton("A");
-        moveSelectorUp(10)
+        if (isKeyboardOpened) {
+            setSelectedKey(prev => prev > 0 ? prev - 1 : prev)
+        } else {
+            moveSelectorUp(10)
+        }
     }
 
     function handleKeyDown(e: any) {
@@ -54,13 +74,18 @@ export function DirectionalButtons({
     };
 
     useEffect(() => {
-        window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('keyup', handleKeyUp);
+        if (!isDisable) {
+            window.addEventListener('keydown', handleKeyDown);
+            window.addEventListener('keyup', handleKeyUp);
+        } else {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+        }
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
         };
-    }, [selectedItemIndex])
+    }, [selectedItemIndex, isDisable, isKeyboardOpened])
 
     return <>
 
